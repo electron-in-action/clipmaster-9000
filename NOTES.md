@@ -126,3 +126,73 @@ copyFromClipboardButton.addEventListener('click', addClippingToList);
 Cool, so now we can add some buttons onto the page. That's pretty nice.
 
 Cool, so, we've got a pretty solid basis for this application. Let's get some of the basics working here.
+
+### Removing Clipboard Contents
+
+Clippings are going to come and go and we don't necessarily want to worry about memory leaks, so let's use event delegation.
+
+Events will bubble up from the button to the clippings list.
+
+When the even hints our listener, we'll look at where it came from and decide what to do.
+
+```js
+clippingsList.addEventListener('click', (event) => {
+  const hasClass = className => event.target.classList.contains(className);
+  if (hasClass('remove-clipping')) console.log('Remove clipping');
+  if (hasClass('copy-clipping')) console.log('Copy clipping');
+  if (hasClass('publish-clipping')) console.log('Publish clipping');
+});
+```
+
+Okay, now, let's traverse up and remove the node entirely.
+
+```js
+const removeClipping = (target) => {
+  target.parentNode.parentNode.remove();
+};
+```
+
+```js
+clippingsList.addEventListener('click', (event) => {
+  const hasClass = className => event.target.classList.contains(className);
+  if (hasClass('remove-clipping')) removeClipping(event.target);
+  if (hasClass('copy-clipping')) console.log('Copy clipping');
+  if (hasClass('publish-clipping')) console.log('Publish clipping');
+});
+```
+
+Alright nice. Now, let's go ahead and get the other two buttons working.
+
+These buttons share something in common, they both need the text from inside the element. So, let's write a helper function for that case.
+
+In fact, all of them need the parent in some regard, in an effort to keep our code dry and maintainable, let's give outselves some helper functions.
+
+```js
+const getButtonParent = (target) => {
+  return target.parentNode.parentNode;
+};
+
+const getClippingText = (clippingListItem) => {
+  return clippingListItem.querySelector('.clipping-text').innerText;
+};
+```
+
+Now we can do some refactoring
+
+```js
+const removeClipping = (target) => {
+  getButtonParent().remove();
+};
+```
+
+```js
+clippingsList.addEventListener('click', (event) => {
+  const hasClass = className => event.target.classList.contains(className);
+  
+  const clippingListItem = (getButtonParent(event));
+
+  if (hasClass('remove-clipping')) removeClipping(clippingListItem);
+  if (hasClass('copy-clipping')) console.log('Copy clipping', getClippingText(clippingListItem));
+  if (hasClass('publish-clipping')) console.log('Publish clipping', getClippingText(clippingListItem));;
+});
+```
