@@ -75,3 +75,54 @@ As we alluded to just a sentence or two ago, Menubar will create a `BrowserWindo
 
 
 (Let's punt on the CSS for now and maybe be able to explain what the fuck is happening in there.)
+
+With menubar application up and running, it's time to shift our focus to the implementing the application's primary functionality.
+
+### Next Steps
+
+Okay, so we need a few things in order to get this application off the ground
+
+When the user clicks on the "Copy from Clipboard"  button, we want to read from the clipboard, get the text, create a DOM element to serve as the UI for the element, then we need to put it on the page.
+
+Let's start with creating a DOM element.
+
+```js
+const createClippingElement = (clippingText) => {
+  const clippingElement = document.createElement('article');
+
+  clippingElement.classList.add('clippings-list-item');
+
+  clippingElement.innerHTML = `
+    <div class="clipping-text" disabled="true"></div>
+    <div class="clipping-controls">
+      <button class="copy-clipping">&rarr; Clipboard</button>
+      <button class="publish-clipping">Publish</button>
+      <button class="remove-clipping">Remove</button>
+    </div>
+  `;
+
+  clippingElement.querySelector('.clipping-text').innerText = clippingText;
+
+  return clippingElement;
+};
+```
+
+Okay, what about adding it to the page?
+
+```js
+const addClippingToList = () => {
+  const clippingText = clipboard.readText();
+  const clippingElement = createClippingElement(clippingText);
+  clippingsList.prepend(clippingElement);
+};
+```
+
+And finally, wiring up the button.
+
+```js
+copyFromClipboardButton.addEventListener('click', addClippingToList);
+```
+
+Cool, so now we can add some buttons onto the page. That's pretty nice.
+
+Cool, so, we've got a pretty solid basis for this application. Let's get some of the basics working here.
