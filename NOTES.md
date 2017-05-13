@@ -78,6 +78,10 @@ As we alluded to just a sentence or two ago, Menubar will create a `BrowserWindo
 
 With menubar application up and running, it's time to shift our focus to the implementing the application's primary functionality.
 
+### Getting to the Developer Tools
+
+(Show readers how to get to the developer tools.)
+
 ### Next Steps
 
 Okay, so we need a few things in order to get this application off the ground
@@ -194,5 +198,184 @@ clippingsList.addEventListener('click', (event) => {
   if (hasClass('remove-clipping')) removeClipping(clippingListItem);
   if (hasClass('copy-clipping')) console.log('Copy clipping', getClippingText(clippingListItem));
   if (hasClass('publish-clipping')) console.log('Publish clipping', getClippingText(clippingListItem));;
+});
+```
+
+### Writing the Text Back to the Clipboard
+
+```js
+const writeToClipboard = (clippingText) => {
+  clipboard.writeText(clippingText);
+};
+```
+
+```js
+clippingsList.addEventListener('click', (event) => {
+  const hasClass = className => event.target.classList.contains(className);
+
+  const clippingListItem = (getButtonParent(event));
+
+  if (hasClass('remove-clipping')) removeClipping(clippingListItem);
+  if (hasClass('copy-clipping')) writeToClipboard(getClippingText(clippingListItem));
+  if (hasClass('publish-clipping')) console.log('Publish Clipping', getClippingText(clippingListItem));
+});
+```
+
+### Publishing Clippings
+
+```js
+const request = require('request');
+```
+
+
+It'd be nice to configure `request` with some defaults.
+
+```js
+const request = require('request').defaults({
+  url: 'https://api.github.com/gists',
+  headers: { 'User-Agent': 'Clipmaster 9000' }
+});
+```
+
+The Gist API expects a JSON payload, so let's create a helper function.
+
+```js
+const toJSON = (clippingText) => {
+  return {
+    body: JSON.stringify({
+      description: "Created with Clipmaster 9000",
+      public: "true",
+      files:{
+        "clipping.txt": { content: clippingText }
+      }
+    })
+  }
+}
+```
+
+Cool, let's wrap this up in a function.
+
+```js
+const publishClipping = (clippingText) => {
+  request.post(toJSON(clippingText), (err, response, body) => {
+    if (err) { return alert(JSON.parse(err).message); }
+
+    const gistUrl = JSON.parse(body).html_url;
+
+    alert(gistUrl);
+    clipboard.writeText(gistUrl);
+  });
+};
+```
+
+```js
+clippingsList.addEventListener('click', (event) => {
+  const hasClass = className => event.target.classList.contains(className);
+
+  const clippingListItem = (getButtonParent(event));
+
+  if (hasClass('remove-clipping')) removeClipping(clippingListItem);
+  if (hasClass('copy-clipping')) writeToClipboard(getClippingText(clippingListItem));
+  if (hasClass('publish-clipping')) publishClipping(getClippingText(clippingListItem));
+});
+```
+
+### Pulling back in Notifications
+
+Okay, that `alert` isn't very graceful, is it?
+
+Let's bring back notifications, but let's also build on what we did in the last chapter.
+
+```js
+const { clipboard, shell } = require('electron');
+```
+
+```js
+const publishClipping = (clippingText) => {
+  request.post(toJSON(clippingText), (err, response, body) => {
+    if (err) {
+      return new Notification('Error Publishing Your Clipping', {
+        body: JSON.parse(err).message
+      });
+    }
+
+    const gistUrl = JSON.parse(body).html_url;
+    const notification = new Notification('Your Clipping Has Been Published', {
+      body: `Click to open ${gistUrl} in your browser.`
+    });
+
+    notification.onclick = shell.openExternal(gistUrl);
+
+    clipboard.writeText(gistUrl);
+  });
+};
+```
+
+### Adding Global Shortcuts
+
+Electron can register global shortcuts with the operating system. Let's take this for a spin in `main.js`.
+
+We'll start by creating a reference to Electron `globalShortcut` module.
+
+```js
+const { globalShortcut } = require('electron');
+```
+
+When the `ready` event is fired, we'll register our shortcut.
+
+```js
+menubar.on('ready', function () {
+  console.log('Application is ready.');
+
+  const createClipping = globalShortcut.register('CommandOrControl+!', () => {
+    console.log('This will eventually trigger creating a new clipping.');
+  });
+
+  if (!createClipping) { console.error('Registration failed', 'createClipping'); }
+});
+```
+
+In our specific application, all of our clippings are managed by the renderer process. So, when the global shortcut is hit, we'll have to let the renderer process know.
+
+Let's modify the event listener to send a message to the renderer process.
+
+```js
+const createClipping = globalShortcut.register('CommandOrControl+!', () => {
+  menubar.window.webContents.send('create-new-clipping');
+});
+
+const writeClipping = globalShortcut.register('CmdOrCtrl+Alt+@', () => {
+  menubar.window.webContents.send('write-to-clipboard');
+});
+
+const publishClipping = globalShortcut.register('CmdOrCtrl+Alt+#', () => {
+  menubar.window.webContents.send('publish-clipping');
+});
+```
+
+In `renderer.js`, we'll listen for this message. First, we'll require the `ipcRenderer` module.
+
+```js
+const { clipboard, ipcRenderer, shell } = require('electron');
+```
+
+We'll then listen for an event on the `create-new-clipping` channel.
+
+```js
+ipcRenderer.on('create-new-clipping', (event) => {
+  addClippingToList();
+  new Notification('Clipping Added', {
+    body: `${clipboard.readText()}`
+  });
+});
+
+ipcRenderer.on('write-to-clipboard', (event) => {
+  const clipping = clippingsList.firstChild;
+  writeToClipboard(getClippingText(clipping);
+});
+
+ipcRenderer.on('publish-clipping', (event) => {
+  const clipping = clippingsList.firstChild;
+  publishClipping(getClippingText(clipping);
 });
 ```
