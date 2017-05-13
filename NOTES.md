@@ -22,7 +22,7 @@ menubar.on('ready', () => {
 
 (Explain what's going on here with `electron-positioner` and the `BrowserWindow` instance.)
 
-(TK: Research what is actually fucking happening here.)
+(TK: Research what is actually fucking happening here. https://github.com/jenslind/electron-positioner#docs)
 
 ### Exploring the Menubar Module
 
@@ -371,11 +371,44 @@ ipcRenderer.on('create-new-clipping', (event) => {
 
 ipcRenderer.on('write-to-clipboard', (event) => {
   const clipping = clippingsList.firstChild;
-  writeToClipboard(getClippingText(clipping);
+  writeToClipboard(getClippingText(clipping));
 });
 
 ipcRenderer.on('publish-clipping', (event) => {
   const clipping = clippingsList.firstChild;
-  publishClipping(getClippingText(clipping);
+  publishClipping(getClippingText(clipping));
+});
+```
+
+### Handling an Error: no webcontents
+
+```js
+const menubar = Menubar({
+  preloadWindow: true,
+  index: `file://${__dirname}/index.html`,
+});
+```
+
+To add:
+
+- Swapping in our awesome icon instead of the cat
+
+### Qutting the application
+
+```js
+const { globalShortcut,  Menu } = require('electron');
+```
+
+```js
+const secondaryMenu = Menu.buildFromTemplate([
+  {
+    label: 'Quit',
+    click() { menubar.app.quit(); },
+    accelerator: 'CommandOrControl+Q'
+  },
+]);
+
+menubar.tray.on('right-click', () => {
+  menubar.tray.popUpContextMenu(secondaryMenu);
 });
 ```

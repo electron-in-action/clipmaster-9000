@@ -1,13 +1,25 @@
 const Menubar = require('menubar');
-const { globalShortcut } = require('electron');
+const { globalShortcut, Menu } = require('electron');
 
-const menubar = Menubar();
+const menubar = Menubar({
+  preloadWindow: true,
+  index: `file://${__dirname}/index.html`,
+});
 
 menubar.on('ready', () => {
-  console.log('Application is ready.');
+  const secondaryMenu = Menu.buildFromTemplate([
+    {
+      label: 'Quit',
+      click() { menubar.app.quit(); },
+      accelerator: 'CommandOrControl+Q'
+    },
+  ]);
+
+  menubar.tray.on('right-click', () => {
+    menubar.tray.popUpContextMenu(secondaryMenu);
+  });
 
   const createClipping = globalShortcut.register('CommandOrControl+!', () => {
-    console.log('createClipping');
     menubar.window.webContents.send('create-new-clipping');
   });
 
@@ -22,8 +34,4 @@ menubar.on('ready', () => {
   if (!createClipping) { console.error('Registration failed', 'createClipping'); }
   if (!writeClipping) { console.error('Registration failed', 'writeClipping'); }
   if (!publishClipping) { console.error('Registration failed', 'publishClipping'); }
-});
-
-menubar.on('after-create-window', () => {
-  menubar.window.loadURL(`file://${__dirname}/index.html`);
 });
