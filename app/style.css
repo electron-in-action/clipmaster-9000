@@ -98,41 +98,41 @@ textarea, input, div, button { outline: none; }
   margin-top: 0.5em;
 }
 
-.clipping-controls button {
+button {
   background-color: rgb(181, 220, 216);
   border: none;
   font-size: 0.8em;
   padding: 0.5em 1em;
 }
 
-.clipping-controls button:hover {
+button:hover {
   background-color: rgb(156, 198, 192);
 }
 
-.clipping-controls button:active {
+button:active {
   background-color: rgb(144, 182, 177);
 }
 
-.clipping-controls button:disabled {
+button:disabled {
   background-color: rgb(196, 204, 202);
 }
 
-.clipping-controls button.remove-clipping {
+button.remove-clipping {
   display: none;
   float: right;
   color: white;
   background-color: rgb(208, 69, 55);
 }
 
-.clipping-controls button.remove-clipping:hover {
+button.remove-clipping:hover {
   background-color: rgb(208, 41, 29);
 }
 
-.clipping-controls button.remove-clipping:active {
+button.remove-clipping:active {
   background-color: rgb(236, 0, 6);
 }
 
-.clipping-controls button.remove-clipping:disabled {
+button.remove-clipping:disabled {
   background-color: rgb(152, 73, 64);
 }
 

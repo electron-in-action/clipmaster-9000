@@ -58,7 +58,7 @@ copyFromClipboardButton.addEventListener('click', addClippingToList);
 clippingsList.addEventListener('click', (event) => {
   const hasClass = className => event.target.classList.contains(className);
 
-  const clippingListItem = (getButtonParent(event));
+  const clippingListItem = getButtonParent(event);
 
   if (hasClass('remove-clipping')) removeClipping(clippingListItem);
   if (hasClass('copy-clipping')) writeToClipboard(getClippingText(clippingListItem));
@@ -86,7 +86,7 @@ const publishClipping = (clippingText) => {
       body: `Click to open ${gistUrl} in your browser.`
     });
 
-    notification.onclick = shell.openExternal(gistUrl);
+    notification.onclick = () => { shell.openExternal(gistUrl); };
 
     clipboard.writeText(gistUrl);
   });
