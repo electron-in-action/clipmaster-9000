@@ -1,37 +1,43 @@
-const Menubar = require('menubar');
-const { globalShortcut, Menu } = require('electron');
+const { app, BrowserWindow, globalShortcut, Menu } = require('electron');
 
-const menubar = Menubar({
-  preloadWindow: true,
-  index: `file://${__dirname}/index.html`,
-});
+let mainWindow;
 
-menubar.on('ready', () => {
-  const secondaryMenu = Menu.buildFromTemplate([
-    {
-      label: 'Quit',
-      click() { menubar.app.quit(); },
-      accelerator: 'CommandOrControl+Q'
-    },
-  ]);
+app.on('ready', () => {
+  mainWindow = new BrowserWindow({
+    height: 500,
+    width: 300,
+    show: false
+  });
 
-  menubar.tray.on('right-click', () => {
-    menubar.tray.popUpContextMenu(secondaryMenu);
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
   });
 
   const createClipping = globalShortcut.register('CommandOrControl+!', () => {
-    menubar.window.webContents.send('create-new-clipping');
+    mainWindow.webContents.send('create-new-clipping');
   });
 
   const writeClipping = globalShortcut.register('CmdOrCtrl+Alt+@', () => {
-    menubar.window.webContents.send('write-to-clipboard');
+    mainWindow.webContents.send('write-to-clipboard');
   });
 
   const publishClipping = globalShortcut.register('CmdOrCtrl+Alt+#', () => {
-    menubar.window.webContents.send('publish-clipping');
+    mainWindow.webContents.send('publish-clipping');
   });
 
-  if (!createClipping) { console.error('Registration failed', 'createClipping'); }
-  if (!writeClipping) { console.error('Registration failed', 'writeClipping'); }
-  if (!publishClipping) { console.error('Registration failed', 'publishClipping'); }
+  if (!createClipping) {
+    console.error('Registration failed', 'createClipping');
+  }
+  if (!writeClipping) {
+    console.error('Registration failed', 'writeClipping');
+  }
+  if (!publishClipping) {
+    console.error('Registration failed', 'publishClipping');
+  }
 });

@@ -66,7 +66,7 @@ clippingsList.addEventListener('click', (event) => {
 });
 
 const removeClipping = (target) => {
-  getButtonParent().remove();
+  target.remove();
 };
 
 const writeToClipboard = (clippingText) => {
