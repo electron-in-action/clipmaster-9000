@@ -74,6 +74,7 @@ const writeToClipboard = (clippingText) => {
 };
 
 const publishClipping = (clippingText) => {
+  console.log(request.post);
   request.post(toJSON(clippingText), (err, response, body) => {
     if (err) {
       return new Notification('Error Publishing Your Clipping', {
