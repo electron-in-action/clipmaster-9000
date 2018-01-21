@@ -1,6 +1,5 @@
 const Application = require('spectron').Application;
 const path = require('path');
-const sinon = require('sinon');
 
 
 let electronPath = path.join(
@@ -15,7 +14,7 @@ if (process.platform === 'win32') {
   electronPath += '.cmd';
 }
 
-describe('application launch', () => {
+describe('Clipmaster 9000', () => {
   let app;
 
   beforeEach(() => {
@@ -95,11 +94,4 @@ describe('application launch', () => {
     return expect(clipboardText).toBe('Vegan Ham');
   });
 
-  fit('should post the clipping to Github', async () => {
-    await app.client.waitUntilWindowLoaded();
-    await app.electron.clipboard.writeText('Vegan Ham');
-    await app.client.click('#copy-from-clipboard');
-    await app.client.click('.publish-clipping');
-    const server = sinon.fakeServer.create();
-  });
 });
