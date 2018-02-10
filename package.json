@@ -14,12 +14,12 @@
     "clipboard"
   ],
   "dependencies": {
-    "electron": "^1.6.2",
-    "menubar": "^5.2.3",
-    "request": "^2.81.0"
+    "electron": "1.8.2",
+    "menubar": "5.2.3",
+    "request": "2.83.0"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint": "4.17.0",
+    "eslint-plugin-import": "2.8.0"
   }
 }
