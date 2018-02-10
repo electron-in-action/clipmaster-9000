@@ -8,14 +8,14 @@ const request = require('request').defaults({
 const clippingsList = document.getElementById('clippings-list');
 const copyFromClipboardButton = document.getElementById('copy-from-clipboard');
 
-ipcRenderer.on('create-new-clipping', (event) => {
+ipcRenderer.on('create-new-clipping', () => {
   addClippingToList();
   new Notification('Clipping Added', {
     body: `${clipboard.readText()}`
   });
 });
 
-ipcRenderer.on('write-to-clipboard', (event) => {
+ipcRenderer.on('write-to-clipboard', () => {
   const clipping = clippingsList.firstChild;
   writeToClipboard(getClippingText(clipping));
   new Notification('Clipping Copied', {
@@ -23,7 +23,7 @@ ipcRenderer.on('write-to-clipboard', (event) => {
   });
 });
 
-ipcRenderer.on('publish-clipping', (event) => {
+ipcRenderer.on('publish-clipping', () => {
   const clipping = clippingsList.firstChild;
   publishClipping(getClippingText(clipping));
 });
@@ -66,7 +66,7 @@ clippingsList.addEventListener('click', (event) => {
 });
 
 const removeClipping = (target) => {
-  getButtonParent().remove();
+  target.remove();
 };
 
 const writeToClipboard = (clippingText) => {
