@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Clipmaster 9000</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+  </head>
+  <body>
+    <div class="container">
+      <section class="controls">
+        <button id="copy-from-clipboard">Copy from Clipboard</button>
+      </section>
+
+      <section class="content">
+        <div id="clippings-list" class="clippings-list"></div>
+      </section>
+    </div>
+    <script>
+      require('./renderer');
+    </script>
+  </body>
+</html>

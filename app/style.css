@@ -1,0 +1,141 @@
+html {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body, input {
+  font: menu;
+  font-size: 12px;
+}
+
+body > div {
+  height: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+.container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+}
+
+textarea, input, div, button { outline: none; }
+
+.controls {
+  background-color: rgb(217, 241, 238);
+  padding: 1em;
+  top: 0;
+  position: fixed;
+  width: 100%;
+}
+
+.controls button {
+  background-color: rgb(181, 220, 216);
+  border: none;
+  padding: 0.5em 1em;
+}
+
+.controls button:hover {
+  background-color: rgb(156, 198, 192);
+}
+
+.controls button:active {
+  background-color: rgb(144, 182, 177);
+}
+
+.controls button:disabled {
+  background-color: rgb(196, 204, 202);
+}
+
+.content {
+  height: 100%;
+}
+
+.clippings-list {
+  margin-top: 65px;
+  padding: 0 10px;
+}
+
+.clippings-list-item {
+  border: 1px solid rgb(178, 193, 191);
+  box-shadow: 1px 1px 1px 1px rgba(205, 228, 224, 0.78);
+  padding: 0.5em;
+  margin-bottom: 1em;
+}
+
+.clipping-text {
+  background-color: rgb(228, 248, 245);
+  padding: 0.5em;
+  min-width: 100%;
+  max-height: 10em;
+  overflow: scroll;
+}
+
+.clipping-text::-webkit-scrollbar {
+  display: none;
+}
+
+.clipping-controls {
+  margin-top: 0.5em;
+}
+
+button {
+  background-color: rgb(181, 220, 216);
+  border: none;
+  font-size: 0.8em;
+  padding: 0.5em 1em;
+}
+
+button:hover {
+  background-color: rgb(156, 198, 192);
+}
+
+button:active {
+  background-color: rgb(144, 182, 177);
+}
+
+button:disabled {
+  background-color: rgb(196, 204, 202);
+}
+
+button.remove-clipping {
+  display: none;
+  float: right;
+  color: white;
+  background-color: rgb(208, 69, 55);
+}
+
+button.remove-clipping:hover {
+  background-color: rgb(208, 41, 29);
+}
+
+button.remove-clipping:active {
+  background-color: rgb(236, 0, 6);
+}
+
+button.remove-clipping:disabled {
+  background-color: rgb(152, 73, 64);
+}
+
+.clippings-list-item:hover button.remove-clipping {
+  display: inline-block;
+}
