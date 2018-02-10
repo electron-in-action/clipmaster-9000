@@ -1,0 +1,25 @@
+{
+  "name": "clipmaster-9000",
+  "version": "1.0.0",
+  "description": "A menubar application with a rich UI.",
+  "main": "app/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/electron-in-action/clipmaster-9000.git",
+  "author": "Steve Kinney <hello@stevekinney.net>",
+  "license": "MIT",
+  "keywords": [
+    "electron",
+    "clipboard"
+  ],
+  "dependencies": {
+    "electron": "^1.6.2",
+    "menubar": "^5.2.3",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.2.0"
+  }
+}
