@@ -1,8 +1,9 @@
 const { clipboard, ipcRenderer, shell } = require('electron');
 
 const request = require('request').defaults({
-  url: 'https://api.github.com/gists',
-  headers: { 'User-Agent': 'Clipmaster 9000' }
+  url: 'https://cliphub.glitch.me/clippings',
+  headers: { 'User-Agent': 'Clipmaster 9000' },
+  json: true,
 });
 
 const clippingsList = document.getElementById('clippings-list');
@@ -74,14 +75,14 @@ const writeToClipboard = (clippingText) => {
 };
 
 const publishClipping = (clippingText) => {
-  request.post(toJSON(clippingText), (err, response, body) => {
+  request.post({ json: { clipping: clippingText } }, (err, response, body) => {
     if (err) {
       return new Notification('Error Publishing Your Clipping', {
         body: JSON.parse(err).message
       });
     }
 
-    const gistUrl = JSON.parse(body).html_url;
+    const gistUrl = body.url;
     const notification = new Notification('Your Clipping Has Been Published', {
       body: `Click to open ${gistUrl} in your browser.`
     });
@@ -98,16 +99,4 @@ const getButtonParent = ({ target }) => {
 
 const getClippingText = (clippingListItem) => {
   return clippingListItem.querySelector('.clipping-text').innerText;
-};
-
-const toJSON = (clippingText) => {
-  return {
-    body: JSON.stringify({
-      description: 'Created with Clipmaster 9000',
-      public: 'true',
-      files: {
-        'clipping.txt': { content: clippingText }
-      }
-    })
-  };
 };

@@ -3,6 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Content-Security-Policy"
+          content="
+            default-src 'self';
+            script-src 'self' 'unsafe-inline';
+            connect-src https://cliphub.glitch.com/*
+          "
+    >
+    <!-- Change the URL in the line above if you fork the back end server. -->
     <title>Clipmaster 9000</title>
     <link rel="stylesheet" href="style.css" type="text/css">
   </head>
